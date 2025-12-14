@@ -19,15 +19,16 @@ Given an IP or domain and Nauthiz:
 
 ## Architecture
 FastAPI (REST layer)
-     |
+     ↓
 Authentication (X-API-Key)
-     |
+     ↓
 IOC Enrichment (async providers)
-     |
-      VirusTotal, SeurityTrails, WHOIS/Hunters
-     |
-Scoring (0-100 -> risk level)
-     |
+├─ VirusTotal
+├─ SecurityTrails
+└─ WHOIS/Hunter
+     ↓
+Scoring (0-100 → risk level)
+     ↓
 SQLite (persistent storage)
 
 ---
