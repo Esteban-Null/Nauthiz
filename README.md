@@ -114,10 +114,10 @@ curl -X POST http://localhost:8000/api/query \
   "created_at": "2024-12-10T16:47:23.456Z"
 }
 
-- "POST /api/query
-- GET /api/summary/fioc}
-- GET /api/history/fioc}
-- GET /api/timeline/(ioc}
+- POST /api/query
+- GET /api/summary/{ioc}
+- GET /api/history/{ioc}
+- GET /api/timeline/{ioc}
 
 ## Roadmap
 ~ GraphQL endpoint for complex queries
