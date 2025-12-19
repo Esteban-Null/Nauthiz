@@ -58,12 +58,12 @@ SQLite (persistent storage)
 # 1. Clone and Setup
 
 ```In Terminal 
-git clone https:// github.com/Esteban-Null/nauthiz.git
+git clone https://github.com/Esteban-Null/nauthiz.git
 cd nauthiz
 
 python3 -m venv venv
-source venv/bin/activate #(Linux,
-for Windows: venv\Scripts\activate)
+source venv/bin/activate #(Linux)
+venv\Scripts\activate) #(windows)
 
 pip install -r requirements.txt
 
@@ -119,7 +119,7 @@ curl -X POST http://localhost:8000/api/query \
 - GET /api/history/{ioc}
 - GET /api/timeline/{ioc}
 
-## Roadmap
+Roadmap
 ~ GraphQL endpoint for complex queries
 ~ Batch IOC processing (/api/batch)
 ~ Webhook delivery for risk changes
@@ -128,8 +128,8 @@ curl -X POST http://localhost:8000/api/query \
 ~ Web UI dashboard (NetworkX graph visualization)
 ~ Rate limiting & quota management
 ​
-## Contributing
+Contributing
 Found a bug? Have an idea? Open an issue or PR.
 ​
-## License
+License
 MIT License – see LICENSE file.
