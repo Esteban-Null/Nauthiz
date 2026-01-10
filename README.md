@@ -119,6 +119,24 @@ curl -X POST http://localhost:8000/api/query \
 - GET /api/history/{ioc}
 - GET /api/timeline/{ioc}
 
+## Demo
+
+### API Documentation
+Interactive Swagger UI at `/docs`:
+![Swagger UI](screenshots/swagger_ui.png)
+
+### Query Endpoint
+Enrich IOCs with multiple providers (VirusTotal, SecurityTrails, WHOIS):
+![POST /query](screenshots/query_response.png)
+
+### Summary
+Latest query summary for an IOC:
+![GET /summary](screenshots/summary_response.png)
+
+### Timeline 
+Temporal history of an IOC
+![GET /timeline](screenshots/timeline_response.png)
+
 Roadmap
 ~ GraphQL endpoint for complex queries
 ~ Batch IOC processing (/api/batch)
