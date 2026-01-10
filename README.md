@@ -19,16 +19,37 @@ Given an IP or domain and Nauthiz:
 
 ## Architecture
 FastAPI (REST layer)
-     |
+     ↓
 Authentication (X-API-Key)
-     |
+     ↓
 IOC Enrichment (async providers)
-     |
-      VirusTotal, SeurityTrails, WHOIS/Hunters
-     |
-Scoring (0-100 -> risk level)
-     |
+├─ VirusTotal
+├─ SecurityTrails
+└─ WHOIS/Hunter
+     ↓
+Scoring (0-100 → risk level)
+     ↓
 SQLite (persistent storage)
+
+---
+
+## Features
+
+### Security
+- **API Key authentication** (`X-API-Key` header, not versioned in repo)
+- **Environment variables** for sensitive data (`.env` file)
+- **Database constraints** (`CHECK` on score and risk_level)
+- **Hardened file permissions** (`0700` directories, `0600` database)
+
+### Integrations
+- **VirusTotal** – Real-time malware detection scores
+- **SecurityTrails** – Historical DNS resolutions and infrastructure data
+- **WHOIS/Hunter** – Domain registration and email enumeration
+
+### Data Persistence
+- Stores every query with full enrichment data
+- History and timeline endpoints to track IOC behavior over time
+- Temporal markers: `first_seen_global`, `last_updated`, `activity_phase`, `burned_infra`
 
 ---
 
@@ -37,12 +58,12 @@ SQLite (persistent storage)
 # 1. Clone and Setup
 
 ```In Terminal 
-git clone https:// github.com/Esteban-Null/nauthiz.git
+git clone https://github.com/Esteban-Null/nauthiz.git
 cd nauthiz
 
 python3 -m venv venv
-source venv/bin/activate #(Linux,
-for Windows: venv\Scripts\activate)
+source venv/bin/activate #(Linux)
+venv\Scripts\activate) #(windows)
 
 pip install -r requirements.txt
 
@@ -72,23 +93,43 @@ uvicorn main:app --reload
 
 Open http:localhost:8000/doc (for Swagger interative docs)
 
-##Request example
+## Endpoint Query IOC:
 
-```http
-POST /api/query
-X-API-Key: <insert_your_api_key>
+curl -X POST http://localhost:8000/api/query \
+  -H "X-API-Key: your-secret-key-here" \
+  -H "Content-Type: application/json" \
+  -d '{"ioc": "example.com", "ioc_type": "domain"}'
 
-{
-  "ioc": "example.com",
-  "ioc_type": "domain"
-}
-Works best with domains at the moment.
-Short response example:
+## Nauthiz Response:
+
 {
   "ioc": "example.com",
   "ioc_type": "domain",
-  "score": 50,
+  "score": 45,
   "risk_level": "medium",
   "sources": ["virustotal", "securitytrails", "whois"],
-  "vt": { "...": "..." }
+  "vt": { "detections": 2, "total": 89, "url": "..." },
+  "st": { "resolutions": [...] },
+  "whois": { "registrar": "...", "created_date": "..." },
+  "created_at": "2024-12-10T16:47:23.456Z"
 }
+
+- POST /api/query
+- GET /api/summary/{ioc}
+- GET /api/history/{ioc}
+- GET /api/timeline/{ioc}
+
+Roadmap
+~ GraphQL endpoint for complex queries
+~ Batch IOC processing (/api/batch)
+~ Webhook delivery for risk changes
+~ Additional providers (GreyNoise, AbuseIPDB, urlscan.io)
+~ Temporal phase detection (active campaign, burned infrastructure)
+~ Web UI dashboard (NetworkX graph visualization)
+~ Rate limiting & quota management
+​
+Contributing
+Found a bug? Have an idea? Open an issue or PR.
+​
+License
+MIT License – see LICENSE file.
