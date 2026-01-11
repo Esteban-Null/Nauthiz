@@ -4,16 +4,15 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104-009485?logo=fastapi&logoolor=white)](https://fastapi.tiangolo.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Small, focused IOC build with FastAPI and SQLite. Query an IP or a domain,       get threat intelligence score from VirusTotal,                                   SecurityTrails, and WHOIS in seconds
-
+Small, focused IOC build with FastAPI and SQLite. Query an IP or a domain, get threat intelligence score from VirusTotal, SecurityTrails, and WHOIS in seconds
 ---
 ## How it does 
 
 Given an IP or domain and Nauthiz:
-- **Enriches** the IOC via VT/RDAP with VirusTotal,                              SecurityTrails and WHOIS lookups
-- **Scores** the threat risk level on a 0 to 100 scale,                          normalized to: `low` / `medium` / `high` / `critical`.
-- **Persists** the full query history in SQLite                                   with strong data integrity.
-- **Exposes** REST endpoints to query,                                           summarize, view history and analyze temporal trends.
+- **Enriches** the IOC via VirusTotal, SecurityTrails and WHOIS lookups
+- **Scores** threat risk on level on a 0-100 scale, normalized to: `low` / `medium` / `high` / `critical`.
+- **Persists** query history in SQLite with data integrity constraints.
+- **Exposes** REST endpoints to query, summarize, view history and analyze temporal trends.
 
 ---
 
@@ -23,9 +22,9 @@ FastAPI (REST layer)
 Authentication (X-API-Key)
      ↓
 IOC Enrichment (async providers)
-├─ VirusTotal
-├─ SecurityTrails
-└─ WHOIS/Hunter
+ VirusTotal
+ SecurityTrails
+ WHOIS/Hunter
      ↓
 Scoring (0-100 → risk level)
      ↓
@@ -37,19 +36,19 @@ SQLite (persistent storage)
 
 ### Security
 - **API Key authentication** (`X-API-Key` header, not versioned in repo)
-- **Environment variables** for sensitive data (`.env` file)
-- **Database constraints** (`CHECK` on score and risk_level)
+- **Environment variables** for sensitive credentials (`.env` file gotignored)
+- **Database constraints** on score and risk_level values
 - **Hardened file permissions** (`0700` directories, `0600` database)
 
 ### Integrations
-- **VirusTotal** – Real-time malware detection scores
-- **SecurityTrails** – Historical DNS resolutions and infrastructure data
-- **WHOIS/Hunter** – Domain registration and email enumeration
+- **VirusTotal** – Real-time malware detection and commubity scores
+- **SecurityTrails** – Historical DNS resolutions and infrastructure records
+- **WHOIS/Hunter** – Domain registration details and email discovery
 
 ### Data Persistence
-- Stores every query with full enrichment data
-- History and timeline endpoints to track IOC behavior over time
-- Temporal markers: `first_seen_global`, `last_updated`, `activity_phase`, `burned_infra`
+- Every query stored with full enrichment data
+- History endpoints to track IOC behavior over time
+- Timeline endpoint with temporal markers: `first_seen`, `last_updated`, `activity_phase`, `burned_infra`
 
 ---
 
@@ -63,11 +62,12 @@ cd nauthiz
 
 python3 -m venv venv
 source venv/bin/activate #(Linux)
+
 venv\Scripts\activate) #(windows)
 
 pip install -r requirements.txt
 
-## 2. Configure
+2. Configure
 # Create .env in the project root:
 
 API_KEY=your-secret-key-here
@@ -84,7 +84,7 @@ VirusTotal - Free tier avalible
 SeurityTrails - Free tier avalible
 Hunters.io - Free tiers avalible
 
-## 3 Run
+3 Run
 #Initialize database (creates tables                                            and constraints)
 python3 -c "from app.core.db import init_db; init_db()"
 
@@ -121,6 +121,21 @@ curl -X POST http://localhost:8000/api/query \
 
 ## Demo
 
+Interactive API documentation at /docs:
+Swagger UI
+
+Query Endpoint
+Enrich IOCs with multiple threat intelligence providers:
+POST /query
+Summary
+
+Latest assessment for an IOC:
+
+GET /summary
+Timeline
+Temporal activity history:
+GET /timeline
+
 ### API Documentation
 Interactive Swagger UI at `/docs`:
 ![Swagger UI](screenshots/swagger_ui.png)
@@ -138,16 +153,17 @@ Temporal history of an IOC
 ![GET /timeline](screenshots/timeline_response.png)
 
 Roadmap
-~ GraphQL endpoint for complex queries
-~ Batch IOC processing (/api/batch)
-~ Webhook delivery for risk changes
-~ Additional providers (GreyNoise, AbuseIPDB, urlscan.io)
-~ Temporal phase detection (active campaign, burned infrastructure)
-~ Web UI dashboard (NetworkX graph visualization)
-~ Rate limiting & quota management
+• [ ] GraphQL endpoint for complex queries
+• [ ] Batch IOC processing (/api/batch)
+• [ ] Webhook delivery for risk changes
+• [ ] Additional providers (GreyNoise, AbuseIPDB, urlscan.io)
+• [ ] Temporal phase detection (active campaigns, burned infrastructure)
+• [ ] Web UI dashboard with NetworkX graph visualization
+• [ ] Rate limiting & quota management
+• [ ] Redis caching layer
 ​
 Contributing
-Found a bug? Have an idea? Open an issue or PR.
-​
+Found a bug? Have an idea? Open an issue or submit a pull request
+
 License
 MIT License – see LICENSE file.
